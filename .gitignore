@@ -1,0 +1,8 @@
+# .gitignore dosyası
+sim_build/
+__pycache__/
+*.vvp
+*.xml
+*.vcd
+.DS_Store
+*.log
