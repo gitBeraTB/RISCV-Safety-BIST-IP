@@ -1,28 +1,48 @@
-# Simulator language
+# -----------------------------------------------------------------------------
+# COCOTB MAKEFILE FOR RISC-V IBEX EX_BLOCK
+# -----------------------------------------------------------------------------
+
+# Simulator setup
+SIM ?= icarus
 TOPLEVEL_LANG ?= verilog
 
+# HDL Klasörünün Yolu
+HDL_DIR = $(PWD)/../HDL
 
-VERILOG_SOURCES += $(PWD)/../HDL/ibex_src/ibex_pkg.sv
-VERILOG_SOURCES += $(PWD)/../HDL/ibex_src/ibex_alu.sv
+# -----------------------------------------------------------------------------
+# SIMULATION SETTINGS (CRITICAL FIX)
+# -----------------------------------------------------------------------------
 
-# 2. Bizim BIST Modüllerimiz
-VERILOG_SOURCES += $(PWD)/../HDL/lfsr_gen.sv
-VERILOG_SOURCES += $(PWD)/../HDL/misr_analyzer.sv
-VERILOG_SOURCES += $(PWD)/../HDL/idle_detector.sv
-VERILOG_SOURCES += $(PWD)/../HDL/apb_slave_if.sv
-VERILOG_SOURCES += $(PWD)/../HDL/runtime_bist_controller.sv
+# Icarus Verilog'a include dosyalarını (prim_assert.sv gibi) 
+# HDL klasöründe aramasını söylüyoruz:
+EXTRA_ARGS += -I$(HDL_DIR) -g2012
 
-# 3. Top Level Wrapper (Bu değişmedi)
-VERILOG_SOURCES += $(PWD)/../HDL/ibex_alu_bist_wrapper.sv
+# -----------------------------------------------------------------------------
+# SOURCE FILES
+# -----------------------------------------------------------------------------
 
-# Top level module name
-TOPLEVEL = ibex_alu_bist_wrapper
+# 1. Packages
+VERILOG_SOURCES += $(HDL_DIR)/prim_mubi_pkg.sv
+VERILOG_SOURCES += $(HDL_DIR)/edn_pkg.sv
+VERILOG_SOURCES += $(HDL_DIR)/top_racl_pkg.sv
+VERILOG_SOURCES += $(HDL_DIR)/flash_ctrl_top_specific_pkg.sv
+VERILOG_SOURCES += $(HDL_DIR)/ibex_pkg.sv
 
-# Python test module name
-COCOTB_TEST_MODULES = tb_ibex_wrapper
+# 2. Sub-modules
+VERILOG_SOURCES += $(HDL_DIR)/ibex_alu.sv
+VERILOG_SOURCES += $(HDL_DIR)/ibex_multdiv_fast.sv
 
-# Simulator
-SIM ?= icarus
+# 3. Wrapper
+VERILOG_SOURCES += $(HDL_DIR)/ibex_alu_bist_wrapper.sv
 
-# Include Cocotb makefiles
+# 4. Top Module
+VERILOG_SOURCES += $(HDL_DIR)/ibex_ex_block.sv
+
+# -----------------------------------------------------------------------------
+# CONFIGURATION
+# -----------------------------------------------------------------------------
+
+TOPLEVEL = ibex_ex_block
+MODULE = test_ibex_RISC-V
+
 include $(shell cocotb-config --makefiles)/Makefile.sim

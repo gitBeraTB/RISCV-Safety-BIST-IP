@@ -15,7 +15,17 @@ module ibex_ex_block #(
 ) (
   input  logic                  clk_i,
   input  logic                  rst_ni,
-
+  input  logic                  core_sleep_i, 
+  input  logic                  sim_fault_inject_i, 
+  output logic                  bist_error_irq_o,
+// APB
+  input  logic [31:0] paddr_i,
+  input  logic        psel_i,
+  input  logic        penable_i,
+  input  logic        pwrite_i,
+  input  logic [31:0] pwdata_i,
+  output logic [31:0] prdata_o,
+  output logic        pready_o,
   // ALU
   input  ibex_pkg::alu_op_e     alu_operator_i,
   input  logic [31:0]           alu_operand_a_i,
@@ -41,8 +51,8 @@ module ibex_ex_block #(
 
   // intermediate val reg
   output logic [1:0]            imd_val_we_o,
-  output logic [33:0]           imd_val_d_o[2],
-  input  logic [33:0]           imd_val_q_i[2],
+  output logic [31:0]           imd_val_d_o[2],
+  input  logic [31:0]           imd_val_q_i[2],
 
   // Outputs
   output logic [31:0]           alu_adder_result_ex_o, // to LSU
@@ -58,14 +68,14 @@ module ibex_ex_block #(
   logic [31:0] alu_result, multdiv_result;
 
   logic [32:0] multdiv_alu_operand_b, multdiv_alu_operand_a;
-  logic [33:0] alu_adder_result_ext;
+  logic [31:0] alu_adder_result_ext;
   logic        alu_cmp_result, alu_is_equal_result;
   logic        multdiv_valid;
   logic        multdiv_sel;
   logic [31:0] alu_imd_val_q[2];
   logic [31:0] alu_imd_val_d[2];
   logic [ 1:0] alu_imd_val_we;
-  logic [33:0] multdiv_imd_val_d[2];
+  logic [31:0] multdiv_imd_val_d[2];
   logic [ 1:0] multdiv_imd_val_we;
 
   /*
@@ -113,24 +123,33 @@ module ibex_ex_block #(
   // ALU //
   /////////
 
-  ibex_alu #(
-    .RV32B(RV32B)
-  ) alu_i (
-    .operator_i         (alu_operator_i),
-    .operand_a_i        (alu_operand_a_i),
-    .operand_b_i        (alu_operand_b_i),
-    .instr_first_cycle_i(alu_instr_first_cycle_i),
-    .imd_val_q_i        (alu_imd_val_q),
-    .imd_val_we_o       (alu_imd_val_we),
-    .imd_val_d_o        (alu_imd_val_d),
-    .multdiv_operand_a_i(multdiv_alu_operand_a),
-    .multdiv_operand_b_i(multdiv_alu_operand_b),
-    .multdiv_sel_i      (multdiv_sel),
-    .adder_result_o     (alu_adder_result_ex_o),
-    .adder_result_ext_o (alu_adder_result_ext),
-    .result_o           (alu_result),
-    .comparison_result_o(alu_cmp_result),
-    .is_equal_result_o  (alu_is_equal_result)
+ // --- BIST WRAPPER 
+  ibex_alu_bist_wrapper #(
+      .RV32B(RV32B)
+  ) u_alu (
+      .clk_i              (clk_i),
+      .rst_ni             (rst_ni),
+      .operator_i         (alu_operator),
+      .operand_a_i        (alu_operand_a),
+      .operand_b_i        (alu_operand_b),
+      .instr_first_cycle_i(instr_first_cycle_i),
+      .multdiv_en_i       (multdiv_en),
+      .imd_val_q_i        (imd_val_q_i),
+      .imd_val_we_i       (imd_val_we_i),
+      
+      .adder_result_o     (alu_adder_result_ext),
+      .result_o           (alu_result),
+      .comparison_result_o(alu_cmp_result),
+      .is_equal_result_o  (alu_is_equal_result),
+      
+      // BIST Sinyalleri
+      .core_sleep_i       (core_sleep_i),
+      .sim_fault_inject_i (sim_fault_inject_i),
+      .bist_error_irq_o   (bist_error_irq_o),
+      
+      .paddr_i(paddr_i), .psel_i(psel_i), .penable_i(penable_i), 
+      .pwrite_i(pwrite_i), .pwdata_i(pwdata_i), 
+      .prdata_o(prdata_o), .pready_o(pready_o)
   );
 
   ////////////////

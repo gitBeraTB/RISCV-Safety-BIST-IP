@@ -27,7 +27,7 @@ module ibex_multdiv_fast #(
   input  logic  [1:0]      signed_mode_i,
   input  logic [31:0]      op_a_i,
   input  logic [31:0]      op_b_i,
-  input  logic [33:0]      alu_adder_ext_i,
+  input  logic [31:0]      alu_adder_ext_i,
   input  logic [31:0]      alu_adder_i,
   input  logic             equal_to_zero_i,
   input  logic             data_ind_timing_i,
@@ -35,8 +35,8 @@ module ibex_multdiv_fast #(
   output logic [32:0]      alu_operand_a_o,
   output logic [32:0]      alu_operand_b_o,
 
-  input  logic [33:0]      imd_val_q_i[2],
-  output logic [33:0]      imd_val_d_o[2],
+  input  logic [31:0]      imd_val_q_i[2],
+  output logic [31:0]      imd_val_d_o[2],
   output logic [1:0]       imd_val_we_o,
 
   input  logic             multdiv_ready_id_i,
@@ -48,17 +48,17 @@ module ibex_multdiv_fast #(
   import ibex_pkg::*;
 
   // Both multiplier variants
-  logic signed [34:0] mac_res_signed;
-  logic        [34:0] mac_res_ext;
-  logic        [33:0] accum;
+  logic signed [31:0] mac_res_signed;
+  logic        [31:0] mac_res_ext;
+  logic        [31:0] accum;
   logic        sign_a, sign_b;
   logic        mult_valid;
   logic        signed_mult;
 
   // Results that become intermediate value depending on whether mul or div is being calculated
-  logic [33:0] mac_res_d, op_remainder_d;
+  logic [31:0] mac_res_d, op_remainder_d;
   // Raw output of MAC calculation
-  logic [33:0] mac_res;
+  logic [31:0] mac_res;
 
   // Divider signals
   logic        div_sign_a, div_sign_b;
@@ -128,7 +128,7 @@ module ibex_multdiv_fast #(
   assign imd_val_we_o[1] = div_en_internal;
   assign op_denominator_q = imd_val_q_i[1][31:0];
   logic [1:0] unused_imd_val;
-  assign unused_imd_val = imd_val_q_i[1][33:32];
+ //  assign unused_imd_val = imd_val_q_i[1][33:32];
   logic unused_mac_res_ext;
   assign unused_mac_res_ext = mac_res_ext[34];
 
@@ -144,16 +144,16 @@ module ibex_multdiv_fast #(
     } mult_fsm_e;
     mult_fsm_e mult_state_q, mult_state_d;
 
-    logic signed [33:0] mult1_res, mult2_res, mult3_res;
-    logic [33:0]        mult1_res_uns;
-    logic [33:32]       unused_mult1_res_uns;
+    logic signed [31:0] mult1_res, mult2_res, mult3_res;
+    logic [31:0]        mult1_res_uns;
+    // logic [33:32]       unused_mult1_res_uns;
     logic [15:0]        mult1_op_a, mult1_op_b;
     logic [15:0]        mult2_op_a, mult2_op_b;
     logic [15:0]        mult3_op_a, mult3_op_b;
     logic               mult1_sign_a, mult1_sign_b;
     logic               mult2_sign_a, mult2_sign_b;
     logic               mult3_sign_a, mult3_sign_b;
-    logic [33:0]        summand1, summand2, summand3;
+    logic [31:0]        summand1, summand2, summand3;
 
     assign mult1_res = $signed({mult1_sign_a, mult1_op_a}) * $signed({mult1_sign_b, mult1_op_b});
     assign mult2_res = $signed({mult2_sign_a, mult2_op_a}) * $signed({mult2_sign_b, mult2_op_b});
@@ -163,7 +163,7 @@ module ibex_multdiv_fast #(
 
     assign mult1_res_uns  = $unsigned(mult1_res);
     assign mac_res_ext    = $unsigned(mac_res_signed);
-    assign mac_res        = mac_res_ext[33:0];
+    assign mac_res        = mac_res_ext[31:0];
 
     assign sign_a = signed_mode_i[0] & op_a_i[31];
     assign sign_b = signed_mode_i[1] & op_b_i[31];
@@ -182,8 +182,8 @@ module ibex_multdiv_fast #(
     assign mult2_op_b = op_b_i[`OP_H];
 
     // used in MULH
-    assign accum[17:0] = imd_val_q_i[0][33:16];
-    assign accum[33:18] = {16{signed_mult & imd_val_q_i[0][33]}};
+    assign accum[17:0] = imd_val_q_i[0][31:16];
+    assign accum[31:18] = {16{signed_mult & imd_val_q_i[0][31]}};
 
     always_comb begin
       // Default values == MULL
@@ -252,7 +252,7 @@ module ibex_multdiv_fast #(
       end
     end
 
-    assign unused_mult1_res_uns = mult1_res_uns[33:32];
+    assign unused_mult1_res_uns = mult1_res_uns[31:32];
 
     // States must be known/valid.
     `ASSERT_KNOWN(IbexMultStateKnown, mult_state_q)
@@ -277,7 +277,7 @@ module ibex_multdiv_fast #(
     assign mac_res_signed =
         $signed({sign_a, mult_op_a}) * $signed({sign_b, mult_op_b}) + $signed(accum);
     assign mac_res_ext    = $unsigned(mac_res_signed);
-    assign mac_res        = mac_res_ext[33:0];
+    assign mac_res        = mac_res_ext[31:0];
 
     always_comb begin
       mult_op_a    = op_a_i[`OP_L];
@@ -348,8 +348,8 @@ module ibex_multdiv_fast #(
           mult_op_b = op_b_i[`OP_H];
           sign_a    = signed_mode_i[0] & op_a_i[31];
           sign_b    = signed_mode_i[1] & op_b_i[31];
-          accum[17: 0]  = imd_val_q_i[0][33:16];
-          accum[33:18]  = {16{signed_mult & imd_val_q_i[0][33]}};
+          accum[17: 0]  = imd_val_q_i[0][31:16];
+          accum[31:18]  = {16{signed_mult & imd_val_q_i[0][31]}};
           // result of AH*BL is not signed only if signed_mode_i == 2'b00
           mac_res_d    = mac_res;
           mult_valid   = 1'b1;
@@ -382,9 +382,9 @@ module ibex_multdiv_fast #(
   end // gen_mult_fast
 
   // Divider
-  assign res_adder_h    = alu_adder_ext_i[32:1];
+  assign res_adder_h    = alu_adder_ext_i[31:1];
   logic [1:0] unused_alu_adder_ext;
-  assign unused_alu_adder_ext = {alu_adder_ext_i[33],alu_adder_ext_i[0]};
+  assign unused_alu_adder_ext = {alu_adder_ext_i[31],alu_adder_ext_i[0]};
 
   assign next_remainder = is_greater_equal ? res_adder_h[31:0] : imd_val_q_i[0][31:0];
   assign next_quotient  = is_greater_equal ? {1'b0, op_quotient_q} | {1'b0, one_shift} :
@@ -464,7 +464,7 @@ module ibex_multdiv_fast #(
 
       MD_ABS_B: begin
         // remainder
-        op_remainder_d   = { 33'h0, op_numerator_q[31]};
+        op_remainder_d   = { 31'h0, op_numerator_q[31]};
         // B abs value
         op_denominator_d = div_sign_b ? alu_adder_i : op_b_i;
         md_state_d       = MD_COMP;
