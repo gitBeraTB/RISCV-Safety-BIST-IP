@@ -79,3 +79,23 @@ RISCV-Safety-BIST-IP/
 ├── Reports/        # Synthesis, Timing, and Utilization Reports
 ├── README.md       # Project Documentation
 └── RISC-BIST.png   # Simulation Waveform Image
+
+## 🚀 How to Run
+
+1.  **Clone the Repository:**
+    ```bash
+    git clone [https://github.com/gitBeraTB/RISCV-Safety-BIST-IP.git](https://github.com/gitBeraTB/RISCV-Safety-BIST-IP.git)
+    ```
+
+2.  **Open in Vivado:**
+    * Create a new project.
+    * Add files from the `HDL` folder.
+    * Set `ibex_ex_block` or `ibex_alu_bist_wrapper` as the Top Module.
+
+3.  **Run Simulation:**
+    * Add `Test/tb_ibex_ex_block.sv` as a simulation source.
+    * Run Behavioral Simulation.
+
+---
+
+*Project developed by [Berath] as part of a RISC-V Safety & Verification study.*
