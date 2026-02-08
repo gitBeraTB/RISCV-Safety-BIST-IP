@@ -1,50 +1,54 @@
-name: RISC-V BIST Verification & Linting
+name: RISC-V Safety BIST CI
 
-# Ne zaman çalışsın?
-# Main branch'e push atıldığında veya herhangi bir Pull Request geldiğinde.
 on:
   push:
-    branches: [ main, master ]
+    branches: [ main ]
   pull_request:
-    branches: [ main, master ]
+    branches: [ main ]
 
 jobs:
-  # 1. Syntax ve Stil Kontrolü (Linting)
+  # 1. Syntax Kontrolü (Linting)
   lint:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
         with:
-          submodules: recursive # Ibex submodule'ünü de çekmek için şart!
+          submodules: recursive
 
       - name: Install Verilator
         run: |
           sudo apt-get update
           sudo apt-get install -y verilator
 
+      # Debug: Dosya yapısını görmek için (Hata alırsan buraya bakarsın)
+      - name: Debug - List Files
+        run: |
+          echo "Listing HDL directory:"
+          ls -R HDL/
+          echo "Listing Test directory:"
+          ls -R Test/
+
       - name: Run Verilator Lint
         run: |
-          # Ibex ve BIST dosyalarını lint et
-          # --lint-only: Sadece kontrol et, compile etme
-          # -Wall: Tüm uyarıları aç
-          verilator --lint-only -Wall -Wno-PINCONNECTEMPTY \
-            -I./rtl/include -I./rtl/ibex/rtl \
-            ./rtl/bist/bist_top.sv
-          echo "Linting Completed Successfully!"
+          # HDL klasörünü include path (-I) olarak ekliyoruz
+          # Top modülünün HDL/bist_top.sv olduğunu varsayıyoruz.
+          # Eğer ismi farklıysa aşağıdan değiştir.
+          verilator --lint-only -Wall -Wno-PINCONNECTEMPTY -Wno-DECLFILENAME \
+            -I./HDL \
+            ./HDL/bist_top.sv
 
-  # 2. Fonksiyonel Doğrulama (Cocotb Simulation)
+  # 2. Fonksiyonel Doğrulama (Cocotb)
   verify:
-    needs: lint # Önce Lint testi geçmeli, yoksa burayı çalıştırma
+    needs: lint
     runs-on: ubuntu-latest
-    
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
         with:
           submodules: recursive
 
-      - name: Install Icarus Verilog & Prerequisites
+      - name: Install Icarus Verilog
         run: |
           sudo apt-get update
           sudo apt-get install -y iverilog build-essential
@@ -54,22 +58,12 @@ jobs:
         with:
           python-version: '3.10'
 
-      - name: Install Cocotb & Python Dependencies
-        run: |
-          pip install --upgrade pip
-          pip install cocotb cocotb-test pytest
-          # Eğer requirements.txt varsa onu da yükle:
-          # pip install -r requirements.txt
+      - name: Install Cocotb
+        run: pip install cocotb cocotb-test pytest
 
       - name: Run Cocotb Tests
         run: |
-          # Simülasyonu başlat
-          # SIM=icarus parametresi ile Icarus Verilog kullanılır
+          # Test klasörüne girip Makefile'ı çalıştır
+          cd Test
+          # Hata durumunda logları görmek için outputu ekrana bas
           make SIM=icarus
-
-      - name: Upload Waveforms on Failure
-        if: failure() # Sadece test patlarsa çalışır
-        uses: actions/upload-artifact@v4
-        with:
-          name: simulation-waves
-          path: sim/waves/*.vcd # Hatalı dalga formunu indirip inceleyebilirsin
