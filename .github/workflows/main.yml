@@ -7,7 +7,6 @@ on:
     branches: [ main ]
 
 jobs:
-  # 1. Syntax ve Lint Kontrolü
   lint:
     runs-on: ubuntu-latest
     steps:
@@ -23,13 +22,16 @@ jobs:
 
       - name: Run Verilator Lint
         run: |
-          # -I./HDL: Include dosyalarini (pkg) burada ara
-          # ./HDL/ibex_ex_block.sv: Senin Makefile'daki TOPLEVEL modülün
+          # Paketler ÖNCE, Modül SONRA gelmeli!
           verilator --lint-only -Wall -Wno-PINCONNECTEMPTY -Wno-DECLFILENAME \
             -I./HDL \
+            ./HDL/ibex_pkg.sv \
+            ./HDL/prim_mubi_pkg.sv \
+            ./HDL/edn_pkg.sv \
+            ./HDL/top_racl_pkg.sv \
+            ./HDL/flash_ctrl_top_specific_pkg.sv \
             ./HDL/ibex_ex_block.sv
 
-  # 2. Fonksiyonel Doğrulama (Cocotb)
   verify:
     needs: lint
     runs-on: ubuntu-latest
@@ -55,5 +57,4 @@ jobs:
       - name: Run Cocotb Tests
         run: |
           cd Test
-          # Makefile'daki ayarları kullanarak testi başlat
           make SIM=icarus
