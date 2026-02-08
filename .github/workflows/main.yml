@@ -7,7 +7,7 @@ on:
     branches: [ main ]
 
 jobs:
-  # 1. Syntax Kontrolü (Linting)
+ 
   lint:
     runs-on: ubuntu-latest
     steps:
@@ -21,24 +21,14 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y verilator
 
-      # Debug: Dosya yapısını görmek için (Hata alırsan buraya bakarsın)
-      - name: Debug - List Files
-        run: |
-          echo "Listing HDL directory:"
-          ls -R HDL/
-          echo "Listing Test directory:"
-          ls -R Test/
-
       - name: Run Verilator Lint
         run: |
-          # HDL klasörünü include path (-I) olarak ekliyoruz
-          # Top modülünün HDL/bist_top.sv olduğunu varsayıyoruz.
-          # Eğer ismi farklıysa aşağıdan değiştir.
+          # -I./HDL : HDL klasörünü include path olarak ekle (pkg dosyaları için)
+          # ./HDL/top_runtime_bist.sv : Senin ANA MODÜL dosyan
           verilator --lint-only -Wall -Wno-PINCONNECTEMPTY -Wno-DECLFILENAME \
             -I./HDL \
-            ./HDL/bist_top.sv
+            ./HDL/top_runtime_bist.sv
 
-  # 2. Fonksiyonel Doğrulama (Cocotb)
   verify:
     needs: lint
     runs-on: ubuntu-latest
@@ -63,7 +53,6 @@ jobs:
 
       - name: Run Cocotb Tests
         run: |
-          # Test klasörüne girip Makefile'ı çalıştır
+          # Test klasörüne gir ve make komutunu çalıştır
           cd Test
-          # Hata durumunda logları görmek için outputu ekrana bas
           make SIM=icarus
