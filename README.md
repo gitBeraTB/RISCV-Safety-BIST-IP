@@ -4,14 +4,14 @@
 ![Platform](https://img.shields.io/badge/Platform-Xilinx%20Vivado-blue)
 ![Language](https://img.shields.io/badge/Language-SystemVerilog-orange)
 
-## 📌 Executive Summary
+##  Executive Summary
 This project demonstrates the integration of a custom **Built-In Self-Test (BIST)** architecture into the execution stage of the open-source **RISC-V Ibex Processor**. The design encapsulates the core Arithmetic Logic Unit (ALU) and Multiplier/Divider (MultDiv) within a proprietary BIST wrapper, enabling self-verification capabilities while maintaining compatibility with standard RISC-V instructions.
 
 A critical challenge regarding bit-width mismatches (34-bit internal vs. 32-bit interface) was resolved through RTL engineering, and the final design was successfully synthesized and verified using Xilinx Vivado.
 
 ---
 
-## 🏗️ System Architecture
+##  System Architecture
 
 The project replaces the standard Ibex execution block with a wrapped version that includes test logic.
 
@@ -23,14 +23,14 @@ The project replaces the standard Ibex execution block with a wrapped version th
 
 ---
 
-## 🔧 Technical Challenges & RTL Modifications
+##  Technical Challenges & RTL Modifications
 
 During the integration, a significant compatibility issue was identified between the Ibex MultDiv unit and the custom 32-bit BIST architecture.
 
-### 🔴 The Problem: Bit-Width Mismatch
+###  The Problem: Bit-Width Mismatch
 The `ibex_multdiv_fast` module internally utilized a **34-bit signed data path (`[33:0]`)** for intermediate calculations, whereas the target BIST wrapper was designed for a standard **32-bit RISC-V interface (`[31:0]`)**. This caused synthesis failures and connectivity issues.
 
-### 🟢 The Solution: Surgical RTL Truncation
+### The Solution: Surgical RTL Truncation
 To resolve this, the internal datapath of the MultDiv unit was modified:
 1.  **Signal Truncation:** The intermediate value signal `imd_val_q_i` was truncated from 34-bits to 32-bits (`[31:0]`).
 2.  **Logic Adaptation:** Bit-slicing operations in the SystemVerilog source code were updated (e.g., `[33:16]` -> `[31:16]`).
@@ -38,7 +38,7 @@ To resolve this, the internal datapath of the MultDiv unit was modified:
 
 ---
 
-## 📊 Verification & Simulation Results
+##  Verification & Simulation Results
 
 The integrated design was verified using a behavioral testbench (`tb_ibex_ex_block.sv`) in Vivado. The simulation confirms that the BIST wrapper correctly drives the processor core and retrieves accurate results despite the bit-width modifications.
 
@@ -56,7 +56,7 @@ The integrated design was verified using a behavioral testbench (`tb_ibex_ex_blo
 
 ---
 
-## 📉 Synthesis Results (Xilinx Vivado)
+##  Synthesis Results (Xilinx Vivado)
 
 The design achieves efficient resource utilization, suitable for low-power FPGA implementations.
 
@@ -70,7 +70,7 @@ The design achieves efficient resource utilization, suitable for low-power FPGA 
 
 ---
 
-## 📂 Directory Structure
+##  Directory Structure
 
 ```text
 RISCV-Safety-BIST-IP/
@@ -80,7 +80,7 @@ RISCV-Safety-BIST-IP/
 ├── README.md       # Project Documentation
 └── RISC-BIST.png   # Simulation Waveform Image
 
-## 🚀 How to Run
+##  How to Run
 
 1.  **Clone the Repository:**
     ```bash
