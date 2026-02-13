@@ -1,0 +1,60 @@
+name: RISC-V Safety BIST CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Install Verilator
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y verilator
+
+      - name: Run Verilator Lint
+        run: |
+          # Paketler ÖNCE, Modül SONRA gelmeli!
+          verilator --lint-only -Wall -Wno-PINCONNECTEMPTY -Wno-DECLFILENAME \
+            -I./HDL \
+            ./HDL/ibex_pkg.sv \
+            ./HDL/prim_mubi_pkg.sv \
+            ./HDL/edn_pkg.sv \
+            ./HDL/top_racl_pkg.sv \
+            ./HDL/flash_ctrl_top_specific_pkg.sv \
+            ./HDL/ibex_ex_block.sv
+
+  verify:
+    needs: lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Install Icarus Verilog
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y iverilog build-essential
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install Cocotb
+        run: pip install cocotb cocotb-test pytest
+
+      - name: Run Cocotb Tests
+        run: |
+          cd Test
+          make SIM=icarus
