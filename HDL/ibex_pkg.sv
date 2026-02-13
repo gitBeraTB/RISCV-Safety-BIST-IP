@@ -337,32 +337,21 @@ package ibex_pkg;
     logic [4:0] lower_cause;
   } exc_cause_t;
 
-  localparam exc_cause_t ExcCauseIrqSoftwareM =
-    '{irq_ext: 1'b1, irq_int: 1'b0, lower_cause: 5'd03};
-  localparam exc_cause_t ExcCauseIrqTimerM =
-    '{irq_ext: 1'b1, irq_int: 1'b0, lower_cause: 5'd07};
-  localparam exc_cause_t ExcCauseIrqExternalM =
-    '{irq_ext: 1'b1, irq_int: 1'b0, lower_cause: 5'd11};
-  localparam exc_cause_t ExcCauseIrqNm =
-    '{irq_ext: 1'b1, irq_int: 1'b0, lower_cause: 5'd31};
+  // DÜZELTİLMİŞ: İsimsiz (Positional) Atamalar
+  // ICARUS FIX: Tırnak isaretini (') sildik. Normal parantez {} kullandik.
+localparam exc_cause_t ExcCauseIrqSoftwareM = {1'b1, 1'b0, 5'd03};
+localparam exc_cause_t ExcCauseIrqTimerM    = {1'b1, 1'b0, 5'd07};
+localparam exc_cause_t ExcCauseIrqExternalM = {1'b1, 1'b0, 5'd11};
+localparam exc_cause_t ExcCauseIrqNm        = {1'b1, 1'b0, 5'd31};
 
-  localparam exc_cause_t ExcCauseInsnAddrMisa =
-    '{irq_ext: 1'b0, irq_int: 1'b0, lower_cause: 5'd00};
-  localparam exc_cause_t ExcCauseInstrAccessFault =
-    '{irq_ext: 1'b0, irq_int: 1'b0, lower_cause: 5'd01};
-  localparam exc_cause_t ExcCauseIllegalInsn =
-    '{irq_ext: 1'b0, irq_int: 1'b0, lower_cause: 5'd02};
-  localparam exc_cause_t ExcCauseBreakpoint =
-    '{irq_ext: 1'b0, irq_int: 1'b0, lower_cause: 5'd03};
-  localparam exc_cause_t ExcCauseLoadAccessFault  =
-    '{irq_ext: 1'b0, irq_int: 1'b0, lower_cause: 5'd05};
-  localparam exc_cause_t ExcCauseStoreAccessFault =
-    '{irq_ext: 1'b0, irq_int: 1'b0, lower_cause: 5'd07};
-  localparam exc_cause_t ExcCauseEcallUMode =
-    '{irq_ext: 1'b0, irq_int: 1'b0, lower_cause: 5'd08};
-  localparam exc_cause_t ExcCauseEcallMMode =
-    '{irq_ext: 1'b0, irq_int: 1'b0, lower_cause: 5'd11};
-
+localparam exc_cause_t ExcCauseInsnAddrMisa     = {1'b0, 1'b0, 5'd00};
+localparam exc_cause_t ExcCauseInstrAccessFault = {1'b0, 1'b0, 5'd01};
+localparam exc_cause_t ExcCauseIllegalInsn      = {1'b0, 1'b0, 5'd02};
+localparam exc_cause_t ExcCauseBreakpoint       = {1'b0, 1'b0, 5'd03};
+localparam exc_cause_t ExcCauseLoadAccessFault  = {1'b0, 1'b0, 5'd05};
+localparam exc_cause_t ExcCauseStoreAccessFault = {1'b0, 1'b0, 5'd07};
+localparam exc_cause_t ExcCauseEcallUMode       = {1'b0, 1'b0, 5'd08};
+localparam exc_cause_t ExcCauseEcallMMode       = {1'b0, 1'b0, 5'd11};
   // Internal NMI cause
   typedef enum logic [4:0] {
     NMI_INT_CAUSE_ECC = 5'b0
@@ -377,41 +366,41 @@ package ibex_pkg;
     DBG_CAUSE_STEP    = 3'h4
   } dbg_cause_e;
 
-  // ICache constants
-  parameter int unsigned ADDR_W           = 32;
-  parameter int unsigned BUS_SIZE         = 32;
-  parameter int unsigned BUS_BYTES        = BUS_SIZE/8;
-  parameter int unsigned BUS_W            = $clog2(BUS_BYTES);
-  parameter int unsigned IC_SIZE_BYTES    = 4096;
-  parameter int unsigned IC_NUM_WAYS      = 2;
-  parameter int unsigned IC_LINE_SIZE     = 64;
-  parameter int unsigned IC_LINE_BYTES    = IC_LINE_SIZE/8;
-  parameter int unsigned IC_LINE_W        = $clog2(IC_LINE_BYTES);
-  parameter int unsigned IC_NUM_LINES     = IC_SIZE_BYTES / IC_NUM_WAYS / IC_LINE_BYTES;
-  parameter int unsigned IC_LINE_BEATS    = IC_LINE_BYTES / BUS_BYTES;
-  parameter int unsigned IC_LINE_BEATS_W  = $clog2(IC_LINE_BEATS);
-  parameter int unsigned IC_INDEX_W       = $clog2(IC_NUM_LINES);
-  parameter int unsigned IC_INDEX_HI      = IC_INDEX_W + IC_LINE_W - 1;
-  parameter int unsigned IC_TAG_SIZE      = ADDR_W - IC_INDEX_W - IC_LINE_W + 1; // 1 valid bit
-  parameter int unsigned IC_OUTPUT_BEATS  = (BUS_BYTES / 2); // number of halfwords
+  // ICache constants - DÜZELTİLDİ: parameter -> localparam
+  localparam int unsigned ADDR_W            = 32;
+  localparam int unsigned BUS_SIZE          = 32;
+  localparam int unsigned BUS_BYTES         = BUS_SIZE/8;
+  localparam int unsigned BUS_W             = $clog2(BUS_BYTES);
+  localparam int unsigned IC_SIZE_BYTES     = 4096;
+  localparam int unsigned IC_NUM_WAYS       = 2;
+  localparam int unsigned IC_LINE_SIZE      = 64;
+  localparam int unsigned IC_LINE_BYTES     = IC_LINE_SIZE/8;
+  localparam int unsigned IC_LINE_W         = $clog2(IC_LINE_BYTES);
+  localparam int unsigned IC_NUM_LINES      = IC_SIZE_BYTES / IC_NUM_WAYS / IC_LINE_BYTES;
+  localparam int unsigned IC_LINE_BEATS     = IC_LINE_BYTES / BUS_BYTES;
+  localparam int unsigned IC_LINE_BEATS_W   = $clog2(IC_LINE_BEATS);
+  localparam int unsigned IC_INDEX_W        = $clog2(IC_NUM_LINES);
+  localparam int unsigned IC_INDEX_HI       = IC_INDEX_W + IC_LINE_W - 1;
+  localparam int unsigned IC_TAG_SIZE       = ADDR_W - IC_INDEX_W - IC_LINE_W + 1; // 1 valid bit
+  localparam int unsigned IC_OUTPUT_BEATS   = (BUS_BYTES / 2); // number of halfwords
   // ICache Scrambling Parameters
-  parameter int unsigned SCRAMBLE_KEY_W   = 128;
-  parameter int unsigned SCRAMBLE_NONCE_W = 64;
+  localparam int unsigned SCRAMBLE_KEY_W    = 128;
+  localparam int unsigned SCRAMBLE_NONCE_W  = 64;
 
-  // PMP constants
-  parameter int unsigned PMP_MAX_REGIONS      = 16;
-  parameter int unsigned PMP_CFG_W            = 8;
+  // PMP constants - DÜZELTİLDİ: parameter -> localparam
+  localparam int unsigned PMP_MAX_REGIONS       = 16;
+  localparam int unsigned PMP_CFG_W             = 8;
   // For RV32 the most significant bit of PMP address refers to the physical
   // address bit index 33.
-  parameter int unsigned PMP_ADDR_MSB         = 33;
+  localparam int unsigned PMP_ADDR_MSB          = 33;
   // For RV32 the least significant bit of the PMP CSRs refers to the physical
   // address bit index 2.
-  parameter int unsigned PMP_ADDR_LSB         = 2;
+  localparam int unsigned PMP_ADDR_LSB          = 2;
 
-  // PMP access type
-  parameter int unsigned PMP_I  = 0;
-  parameter int unsigned PMP_I2 = 1;
-  parameter int unsigned PMP_D  = 2;
+  // PMP access type - DÜZELTİLDİ: parameter -> localparam
+  localparam int unsigned PMP_I  = 0;
+  localparam int unsigned PMP_I2 = 1;
+  localparam int unsigned PMP_D  = 2;
 
   typedef enum logic [1:0] {
     PMP_ACC_EXEC    = 2'b00,
@@ -610,32 +599,32 @@ package ibex_pkg;
     CSR_SECURESEED     = 12'h7C1
   } csr_num_e;
 
-  // CSR pmp-related offsets
-  parameter logic [11:0] CSR_OFF_PMP_CFG  = 12'h3A0; // pmp_cfg  @ 12'h3a0 - 12'h3a3
-  parameter logic [11:0] CSR_OFF_PMP_ADDR = 12'h3B0; // pmp_addr @ 12'h3b0 - 12'h3bf
+  // CSR pmp-related offsets - DÜZELTİLDİ: parameter -> localparam
+  localparam logic [11:0] CSR_OFF_PMP_CFG  = 12'h3A0; // pmp_cfg  @ 12'h3a0 - 12'h3a3
+  localparam logic [11:0] CSR_OFF_PMP_ADDR = 12'h3B0; // pmp_addr @ 12'h3b0 - 12'h3bf
 
-  // CSR status bits
-  parameter int unsigned CSR_MSTATUS_MIE_BIT      = 3;
-  parameter int unsigned CSR_MSTATUS_MPIE_BIT     = 7;
-  parameter int unsigned CSR_MSTATUS_MPP_BIT_LOW  = 11;
-  parameter int unsigned CSR_MSTATUS_MPP_BIT_HIGH = 12;
-  parameter int unsigned CSR_MSTATUS_MPRV_BIT     = 17;
-  parameter int unsigned CSR_MSTATUS_TW_BIT       = 21;
+  // CSR status bits - DÜZELTİLDİ: parameter -> localparam
+  localparam int unsigned CSR_MSTATUS_MIE_BIT      = 3;
+  localparam int unsigned CSR_MSTATUS_MPIE_BIT     = 7;
+  localparam int unsigned CSR_MSTATUS_MPP_BIT_LOW  = 11;
+  localparam int unsigned CSR_MSTATUS_MPP_BIT_HIGH = 12;
+  localparam int unsigned CSR_MSTATUS_MPRV_BIT     = 17;
+  localparam int unsigned CSR_MSTATUS_TW_BIT       = 21;
 
-  // CSR machine ISA
-  parameter logic [1:0] CSR_MISA_MXL = 2'd1; // M-XLEN: XLEN in M-Mode for RV32
+  // CSR machine ISA - DÜZELTİLDİ: parameter -> localparam
+  localparam logic [1:0] CSR_MISA_MXL = 2'd1; // M-XLEN: XLEN in M-Mode for RV32
 
-  // CSR interrupt pending/enable bits
-  parameter int unsigned CSR_MSIX_BIT      = 3;
-  parameter int unsigned CSR_MTIX_BIT      = 7;
-  parameter int unsigned CSR_MEIX_BIT      = 11;
-  parameter int unsigned CSR_MFIX_BIT_LOW  = 16;
-  parameter int unsigned CSR_MFIX_BIT_HIGH = 30;
+  // CSR interrupt pending/enable bits - DÜZELTİLDİ: parameter -> localparam
+  localparam int unsigned CSR_MSIX_BIT      = 3;
+  localparam int unsigned CSR_MTIX_BIT      = 7;
+  localparam int unsigned CSR_MEIX_BIT      = 11;
+  localparam int unsigned CSR_MFIX_BIT_LOW  = 16;
+  localparam int unsigned CSR_MFIX_BIT_HIGH = 30;
 
-  // CSR Machine Security Configuration bits
-  parameter int unsigned CSR_MSECCFG_MML_BIT  = 0;
-  parameter int unsigned CSR_MSECCFG_MMWP_BIT = 1;
-  parameter int unsigned CSR_MSECCFG_RLB_BIT  = 2;
+  // CSR Machine Security Configuration bits - DÜZELTİLDİ: parameter -> localparam
+  localparam int unsigned CSR_MSECCFG_MML_BIT  = 0;
+  localparam int unsigned CSR_MSECCFG_MMWP_BIT = 1;
+  localparam int unsigned CSR_MSECCFG_RLB_BIT  = 2;
 
   // Architecture ID
   // Top bit is unset to indicate an open source project. The lower bits are an ID allocated by the
@@ -650,29 +639,32 @@ package ibex_pkg;
 
   // These LFSR parameters have been generated with
   // $ opentitan/util/design/gen-lfsr-seed.py --width 32 --seed 2480124384 --prefix ""
-  parameter int LfsrWidth = 32;
+  // DÜZELTİLDİ: parameter -> localparam
+  localparam int LfsrWidth = 32;
   typedef logic [LfsrWidth-1:0] lfsr_seed_t;
   typedef logic [LfsrWidth-1:0][$clog2(LfsrWidth)-1:0] lfsr_perm_t;
-  parameter lfsr_seed_t RndCnstLfsrSeedDefault = 32'hac533bf4;
-  parameter lfsr_perm_t RndCnstLfsrPermDefault = {
+  localparam lfsr_seed_t RndCnstLfsrSeedDefault = 32'hac533bf4;
+  localparam lfsr_perm_t RndCnstLfsrPermDefault = {
     160'h1e35ecba467fd1b12e958152c04fa43878a8daed
   };
-  parameter logic [SCRAMBLE_KEY_W-1:0]   RndCnstIbexKeyDefault =
+  localparam logic [SCRAMBLE_KEY_W-1:0]   RndCnstIbexKeyDefault =
       128'h14e8cecae3040d5e12286bb3cc113298;
-  parameter logic [SCRAMBLE_NONCE_W-1:0] RndCnstIbexNonceDefault =
+  localparam logic [SCRAMBLE_NONCE_W-1:0] RndCnstIbexNonceDefault =
       64'hf79780bc735f3843;
 
   // Multi-bit signal used for security hardening. For non-secure implementation all bits other than
   // the bottom bit are ignored.
-  parameter int IbexMuBiWidth = 4;
+  // DÜZELTİLDİ: parameter -> localparam
+  localparam int IbexMuBiWidth = 4;
   typedef logic [IbexMuBiWidth-1:0] ibex_mubi_t;
 
   // Note that if adjusting these parameters it is assumed the bottom bit is set for On and unset
   // for Off. This allows the use of IbexMuBiOn/IbexMuBiOff to work for both secure and non-secure
   // Ibex. If this assumption is broken the RTL that uses ibex_mubi_t types such as the fetch_enable
   // and core_busy signals within `ibex_core` may need adjusting.
-  parameter ibex_mubi_t IbexMuBiOn  = 4'b0101;
-  parameter ibex_mubi_t IbexMuBiOff = 4'b1010;
+  // DÜZELTİLDİ: parameter -> localparam
+  localparam ibex_mubi_t IbexMuBiOn  = 4'b0101;
+  localparam ibex_mubi_t IbexMuBiOff = 4'b1010;
 
   // Default reset values for PMP CSRs. Where the number of regions
   // (PMPNumRegions) is less than 16 the reset values for the higher numbered
@@ -681,46 +673,27 @@ package ibex_pkg;
   // See the Ibex Reference Guide (Custom Reset Values under Physical Memory
   // Protection) for more information.
 
-  parameter pmp_cfg_t PmpCfgRst[PMP_MAX_REGIONS] = '{
-    '{lock: 1'b0, mode: PMP_MODE_OFF, exec: 1'b0, write: 1'b0, read: 1'b0}, // region 0
-    '{lock: 1'b0, mode: PMP_MODE_OFF, exec: 1'b0, write: 1'b0, read: 1'b0}, // region 1
-    '{lock: 1'b0, mode: PMP_MODE_OFF, exec: 1'b0, write: 1'b0, read: 1'b0}, // region 2
-    '{lock: 1'b0, mode: PMP_MODE_OFF, exec: 1'b0, write: 1'b0, read: 1'b0}, // region 3
-    '{lock: 1'b0, mode: PMP_MODE_OFF, exec: 1'b0, write: 1'b0, read: 1'b0}, // region 4
-    '{lock: 1'b0, mode: PMP_MODE_OFF, exec: 1'b0, write: 1'b0, read: 1'b0}, // region 5
-    '{lock: 1'b0, mode: PMP_MODE_OFF, exec: 1'b0, write: 1'b0, read: 1'b0}, // region 6
-    '{lock: 1'b0, mode: PMP_MODE_OFF, exec: 1'b0, write: 1'b0, read: 1'b0}, // region 7
-    '{lock: 1'b0, mode: PMP_MODE_OFF, exec: 1'b0, write: 1'b0, read: 1'b0}, // region 8
-    '{lock: 1'b0, mode: PMP_MODE_OFF, exec: 1'b0, write: 1'b0, read: 1'b0}, // region 9
-    '{lock: 1'b0, mode: PMP_MODE_OFF, exec: 1'b0, write: 1'b0, read: 1'b0}, // region 10
-    '{lock: 1'b0, mode: PMP_MODE_OFF, exec: 1'b0, write: 1'b0, read: 1'b0}, // region 11
-    '{lock: 1'b0, mode: PMP_MODE_OFF, exec: 1'b0, write: 1'b0, read: 1'b0}, // region 12
-    '{lock: 1'b0, mode: PMP_MODE_OFF, exec: 1'b0, write: 1'b0, read: 1'b0}, // region 13
-    '{lock: 1'b0, mode: PMP_MODE_OFF, exec: 1'b0, write: 1'b0, read: 1'b0}, // region 14
-    '{lock: 1'b0, mode: PMP_MODE_OFF, exec: 1'b0, write: 1'b0, read: 1'b0}  // region 15
-  };
+ // Default reset values for PMP CSRs.
+  // Icarus Verilog FIX: Struct constructor '{...} yerine direkt HEX degerler kullaniyoruz.
+  // pmp_cfg_t 'packed' bir struct oldugu icin 6 bitlik vektor olarak atanabilir.
+  // (1 bit lock + 2 bit mode + 1 bit exec + 1 bit write + 1 bit read = 6 bits)
+  // Default reset values for PMP CSRs.
+  // Icarus Verilog FIX: Struct constructor '{...} yerine direkt HEX degerler kullaniyoruz.
+  // pmp_cfg_t 'packed' bir struct oldugu icin 6 bitlik vektor olarak atanabilir.
+  // (1 bit lock + 2 bit mode + 1 bit exec + 1 bit write + 1 bit read = 6 bits)
+  
+  // Default reset values for PMP CSRs.
+  // ICARUS FIX: Packed Array ve Replication Operator Kullanimi
+  // Eski 'unpacked' dizi yerine, erisimi ayni olan 'packed' dizi yapiyoruz.
+  // Boylece '{...} yerine {16{...}} kullanabiliyoruz.
+  
+  // 16 adet, her biri 6 bitlik (struct boyutu) eleman
+  localparam pmp_cfg_t [PMP_MAX_REGIONS-1:0] PmpCfgRst = {PMP_MAX_REGIONS{6'h0}};
 
-  // Addresses are given in byte granularity for readability. A minimum of two
-  // bits will be stripped off the bottom (PMPGranularity == 0) with more stripped
-  // off at coarser granularities.
-  parameter logic [PMP_ADDR_MSB:0] PmpAddrRst[PMP_MAX_REGIONS] = '{
-    34'h0, // region 0
-    34'h0, // region 1
-    34'h0, // region 2
-    34'h0, // region 3
-    34'h0, // region 4
-    34'h0, // region 5
-    34'h0, // region 6
-    34'h0, // region 7
-    34'h0, // region 8
-    34'h0, // region 9
-    34'h0, // region 10
-    34'h0, // region 11
-    34'h0, // region 12
-    34'h0, // region 13
-    34'h0, // region 14
-    34'h0  // region 15
-  };
+  // Addresses are given in byte granularity.
+  // 16 adet, her biri 34 bitlik (PMP_ADDR_MSB=33) eleman
+  localparam logic [PMP_MAX_REGIONS-1:0][PMP_ADDR_MSB:0] PmpAddrRst = {PMP_MAX_REGIONS{34'h0}};
 
-  parameter pmp_mseccfg_t PmpMseccfgRst = '{rlb : 1'b0, mmwp: 1'b0, mml: 1'b0};
-endpackage
+  // MSECCFG Reset degeri (3 bit)
+  localparam pmp_mseccfg_t PmpMseccfgRst = 3'h0;
+  endpackage

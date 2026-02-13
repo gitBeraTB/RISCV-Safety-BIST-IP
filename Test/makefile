@@ -31,6 +31,11 @@ VERILOG_SOURCES += $(HDL_DIR)/ibex_pkg.sv
 # 2. Sub-modules
 VERILOG_SOURCES += $(HDL_DIR)/ibex_alu.sv
 VERILOG_SOURCES += $(HDL_DIR)/ibex_multdiv_fast.sv
+VERILOG_SOURCES += $(HDL_DIR)/runtime_bist_controller.sv
+VERILOG_SOURCES += $(HDL_DIR)/apb_slave_if.sv
+VERILOG_SOURCES += $(HDL_DIR)/idle_detector.sv
+VERILOG_SOURCES += $(HDL_DIR)/lfsr_gen.sv
+VERILOG_SOURCES += $(HDL_DIR)/misr_analyzer.sv
 
 # 3. Wrapper
 VERILOG_SOURCES += $(HDL_DIR)/ibex_alu_bist_wrapper.sv

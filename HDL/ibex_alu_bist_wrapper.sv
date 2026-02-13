@@ -1,19 +1,27 @@
 module ibex_alu_bist_wrapper import ibex_pkg::*; #(
-    parameter bit RV32B = 0
-)(
+    parameter integer RV32B = 0
+) (
     input  logic              clk_i,
     input  logic              rst_ni,
-    input  alu_op_e           operator_i,
+    
+    // Girisler
+    input  logic [6:0]        operator_i,
     input  logic [31:0]       operand_a_i,
     input  logic [31:0]       operand_b_i,
     input  logic              instr_first_cycle_i,
     input  logic              multdiv_en_i,
-    input logic [31:0]        imd_val_q_i [2],
-    input  logic [1:0]        imd_val_we_i, 
+    
+    // Wrapper disari Packed Array konusur (Testbench uyumu icin)
+    input  logic [1:0][31:0]  imd_val_q_i,
+    input  logic [1:0]        imd_val_we_i,
+    
+    // Cikislar
     output logic [31:0]       adder_result_o,
     output logic [31:0]       result_o,
     output logic              comparison_result_o,
     output logic              is_equal_result_o,
+    
+    // BIST Sinyalleri
     input  logic              core_sleep_i, 
     input  logic [31:0]       paddr_i,
     input  logic              psel_i,
@@ -31,7 +39,7 @@ module ibex_alu_bist_wrapper import ibex_pkg::*; #(
     logic [31:0] bist_pattern;
     
     // MUX Signals
-    alu_op_e     alu_operator_mux;
+    logic [6:0]  alu_operator_mux;
     logic [31:0] alu_operand_a_mux;
     logic [31:0] alu_operand_b_mux;
     
@@ -54,24 +62,43 @@ module ibex_alu_bist_wrapper import ibex_pkg::*; #(
     end
 
     //  IBEX ALU INSTANCE
+    //  Burada "Flattening" yapiyoruz. Wrapper'in [1:0] sinyallerini
+    //  ALU'nun _0 ve _1 portlarina dagitiyoruz.
     ibex_alu #(
         .RV32B(RV32B)
     ) u_real_alu (
+        .clk_i              (clk_i),
+        .rst_ni             (rst_ni),
         .operator_i         (alu_operator_mux),
         .operand_a_i        (alu_operand_a_mux),
         .operand_b_i        (alu_operand_b_mux),
         .instr_first_cycle_i(instr_first_cycle_i),
-    //    .multdiv_en_i       (multdiv_en_i),
-        .imd_val_q_i        (imd_val_q_i),
-    //    .imd_val_we_i       (imd_val_we_i),
-      //  .inject_fault_i     (sim_fault_inject_i),   
+        
+        // --- KRITIK DUZELTME ---
+        // Packed array'i parcalayip bagliyoruz:
+        .imd_val_q_i_0      (imd_val_q_i[0]),
+        .imd_val_q_i_1      (imd_val_q_i[1]),
+        
+        // Cikislar bosta (Open), ama port isimleri _0 _1 oldu
+        .imd_val_d_o_0      (), 
+        .imd_val_d_o_1      (),
+        .imd_val_we_o       (), 
+        
+        // Diger baglantilar
         .adder_result_o     (adder_result_o),
+        .adder_result_ext_o (), // Bosta
         .result_o           (alu_result_raw),
         .comparison_result_o(comparison_result_o),
-        .is_equal_result_o  (is_equal_result_o)
+        .is_equal_result_o  (is_equal_result_o),
+
+        // Kullanilmayan girisleri sifirliyoruz
+        .multdiv_operand_a_i (32'b0),
+        .multdiv_operand_b_i (32'b0),
+        .multdiv_sel_i       (1'b0)
     );
 
     assign result_o = alu_result_raw;
+
     // RUNTIME BIST CONTROLLER  
     runtime_bist_controller #(
         .DATA_WIDTH(32)
