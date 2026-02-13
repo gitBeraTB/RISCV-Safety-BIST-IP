@@ -1,6 +1,6 @@
 # RISC-V Ibex Core with Built-In Self-Test (BIST) Integration
 
-![Cocotb Tests](https://github.com/gitBeraTB/RISCV-Safety-BIST-IP/actions/workflows/cocotb-tests.yml/badge.svg)
+![CI](https://github.com/gitBeraTB/RISCV-Safety-BIST-IP/actions/workflows/main.yml/badge.svg)
 ![Status](https://img.shields.io/badge/Status-Verified-success)
 ![Platform](https://img.shields.io/badge/Platform-Xilinx%20Vivado-blue)
 ![Language](https://img.shields.io/badge/Language-SystemVerilog-orange)
