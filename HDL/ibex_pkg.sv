@@ -1,11 +1,7 @@
 // Copyright lowRISC contributors.
-// Copyright 2017 ETH Zurich and University of Bologna, see also CREDITS.md.
 // Licensed under the Apache License, Version 2.0, see LICENSE for details.
 // SPDX-License-Identifier: Apache-2.0
 
-/**
- * Package with constants used by Ibex
- */
 package ibex_pkg;
 
   ////////////////
@@ -83,120 +79,30 @@ package ibex_pkg;
   ////////////////////
 
   typedef enum logic [6:0] {
-    // Arithmetics
-    ALU_ADD,
-    ALU_SUB,
-
-    // Logics
-    ALU_XOR,
-    ALU_OR,
-    ALU_AND,
-    // RV32B
-    ALU_XNOR,
-    ALU_ORN,
-    ALU_ANDN,
-
-    // Shifts
-    ALU_SRA,
-    ALU_SRL,
-    ALU_SLL,
-    // RV32B
-    ALU_SRO,
-    ALU_SLO,
-    ALU_ROR,
-    ALU_ROL,
-    ALU_GREV,
-    ALU_GORC,
-    ALU_SHFL,
-    ALU_UNSHFL,
-    ALU_XPERM_N,
-    ALU_XPERM_B,
-    ALU_XPERM_H,
-
-    // Address Calculations
-    // RV32B
-    ALU_SH1ADD,
-    ALU_SH2ADD,
-    ALU_SH3ADD,
-
-    // Comparisons
-    ALU_LT,
-    ALU_LTU,
-    ALU_GE,
-    ALU_GEU,
-    ALU_EQ,
-    ALU_NE,
-    // RV32B
-    ALU_MIN,
-    ALU_MINU,
-    ALU_MAX,
-    ALU_MAXU,
-
-    // Pack
-    // RV32B
-    ALU_PACK,
-    ALU_PACKU,
-    ALU_PACKH,
-
-    // Sign-Extend
-    // RV32B
-    ALU_SEXTB,
-    ALU_SEXTH,
-
-    // Bitcounting
-    // RV32B
-    ALU_CLZ,
-    ALU_CTZ,
-    ALU_CPOP,
-
-    // Set lower than
-    ALU_SLT,
-    ALU_SLTU,
-
-    // Ternary Bitmanip Operations
-    // RV32B
-    ALU_CMOV,
-    ALU_CMIX,
-    ALU_FSL,
-    ALU_FSR,
-
-    // Single-Bit Operations
-    // RV32B
-    ALU_BSET,
-    ALU_BCLR,
-    ALU_BINV,
-    ALU_BEXT,
-
-    // Bit Compress / Decompress
-    // RV32B
-    ALU_BCOMPRESS,
-    ALU_BDECOMPRESS,
-
-    // Bit Field Place
-    // RV32B
+    ALU_ADD, ALU_SUB,
+    ALU_XOR, ALU_OR, ALU_AND,
+    ALU_XNOR, ALU_ORN, ALU_ANDN,
+    ALU_SRA, ALU_SRL, ALU_SLL,
+    ALU_SRO, ALU_SLO, ALU_ROR, ALU_ROL,
+    ALU_GREV, ALU_GORC, ALU_SHFL, ALU_UNSHFL,
+    ALU_XPERM_N, ALU_XPERM_B, ALU_XPERM_H,
+    ALU_SH1ADD, ALU_SH2ADD, ALU_SH3ADD,
+    ALU_LT, ALU_LTU, ALU_GE, ALU_GEU, ALU_EQ, ALU_NE,
+    ALU_MIN, ALU_MINU, ALU_MAX, ALU_MAXU,
+    ALU_PACK, ALU_PACKU, ALU_PACKH,
+    ALU_SEXTB, ALU_SEXTH,
+    ALU_CLZ, ALU_CTZ, ALU_CPOP,
+    ALU_SLT, ALU_SLTU,
+    ALU_CMOV, ALU_CMIX, ALU_FSL, ALU_FSR,
+    ALU_BSET, ALU_BCLR, ALU_BINV, ALU_BEXT,
+    ALU_BCOMPRESS, ALU_BDECOMPRESS,
     ALU_BFP,
-
-    // Carry-less Multiply
-    // RV32B
-    ALU_CLMUL,
-    ALU_CLMULR,
-    ALU_CLMULH,
-
-    // Cyclic Redundancy Check
-    ALU_CRC32_B,
-    ALU_CRC32C_B,
-    ALU_CRC32_H,
-    ALU_CRC32C_H,
-    ALU_CRC32_W,
-    ALU_CRC32C_W
+    ALU_CLMUL, ALU_CLMULR, ALU_CLMULH,
+    ALU_CRC32_B, ALU_CRC32C_B, ALU_CRC32_H, ALU_CRC32C_H, ALU_CRC32_W, ALU_CRC32C_W
   } alu_op_e;
 
   typedef enum logic [1:0] {
-    // Multiplier/divider
-    MD_OP_MULL,
-    MD_OP_MULH,
-    MD_OP_DIV,
-    MD_OP_REM
+    MD_OP_MULL, MD_OP_MULH, MD_OP_DIV, MD_OP_REM
   } md_op_e;
 
 
@@ -204,15 +110,10 @@ package ibex_pkg;
   // Control and status registers //
   //////////////////////////////////
 
-  // CSR operations
   typedef enum logic [1:0] {
-    CSR_OP_READ,
-    CSR_OP_WRITE,
-    CSR_OP_SET,
-    CSR_OP_CLEAR
+    CSR_OP_READ, CSR_OP_WRITE, CSR_OP_SET, CSR_OP_CLEAR
   } csr_op_e;
 
-  // Privileged mode
   typedef enum logic[1:0] {
     PRIV_LVL_M = 2'b11,
     PRIV_LVL_H = 2'b10,
@@ -220,115 +121,57 @@ package ibex_pkg;
     PRIV_LVL_U = 2'b00
   } priv_lvl_e;
 
-  // Constants for the dcsr.xdebugver fields
   typedef enum logic[3:0] {
-    XDEBUGVER_NO     = 4'd0, // no external debug support
-    XDEBUGVER_STD    = 4'd4, // external debug according to RISC-V debug spec
-    XDEBUGVER_NONSTD = 4'd15 // debug not conforming to RISC-V debug spec
+    XDEBUGVER_NO     = 4'd0,
+    XDEBUGVER_STD    = 4'd4,
+    XDEBUGVER_NONSTD = 4'd15
   } x_debug_ver_e;
 
-  //////////////
-  // WB stage //
-  //////////////
-
-  // Type of instruction present in writeback stage
   typedef enum logic[1:0] {
-    WB_INSTR_LOAD,  // Instruction is awaiting load data
-    WB_INSTR_STORE, // Instruction is awaiting store response
-    WB_INSTR_OTHER  // Instruction doesn't fit into above categories
+    WB_INSTR_LOAD, WB_INSTR_STORE, WB_INSTR_OTHER
   } wb_instr_type_e;
 
-  //////////////
-  // ID stage //
-  //////////////
-
-  // Operand a selection
   typedef enum logic[1:0] {
-    OP_A_REG_A,
-    OP_A_FWD,
-    OP_A_CURRPC,
-    OP_A_IMM
+    OP_A_REG_A, OP_A_FWD, OP_A_CURRPC, OP_A_IMM
   } op_a_sel_e;
 
-  // Immediate a selection
   typedef enum logic {
-    IMM_A_Z,
-    IMM_A_ZERO
+    IMM_A_Z, IMM_A_ZERO
   } imm_a_sel_e;
 
-  // Operand b selection
   typedef enum logic {
-    OP_B_REG_B,
-    OP_B_IMM
+    OP_B_REG_B, OP_B_IMM
   } op_b_sel_e;
 
-  // Immediate b selection
   typedef enum logic [2:0] {
-    IMM_B_I,
-    IMM_B_S,
-    IMM_B_B,
-    IMM_B_U,
-    IMM_B_J,
-    IMM_B_INCR_PC,
-    IMM_B_INCR_ADDR
+    IMM_B_I, IMM_B_S, IMM_B_B, IMM_B_U, IMM_B_J, IMM_B_INCR_PC, IMM_B_INCR_ADDR
   } imm_b_sel_e;
 
-  // Regfile write data selection
   typedef enum logic {
-    RF_WD_EX,
-    RF_WD_CSR
+    RF_WD_EX, RF_WD_CSR
   } rf_wd_sel_e;
 
-  // Controller FSM state encoding
   typedef enum logic [3:0] {
-    RESET,
-    BOOT_SET,
-    WAIT_SLEEP,
-    SLEEP,
-    FIRST_FETCH,
-    DECODE,
-    FLUSH,
-    IRQ_TAKEN,
-    DBG_TAKEN_IF,
-    DBG_TAKEN_ID
+    RESET, BOOT_SET, WAIT_SLEEP, SLEEP, FIRST_FETCH, DECODE, FLUSH, IRQ_TAKEN, DBG_TAKEN_IF, DBG_TAKEN_ID
   } ctrl_fsm_e;
 
-  //////////////
-  // IF stage //
-  //////////////
-
-  // PC mux selection
   typedef enum logic [2:0] {
-    PC_BOOT,
-    PC_JUMP,
-    PC_EXC,
-    PC_ERET,
-    PC_DRET,
-    PC_BP
+    PC_BOOT, PC_JUMP, PC_EXC, PC_ERET, PC_DRET, PC_BP
   } pc_sel_e;
 
-  // Compressed instruction expansion
   typedef enum logic [1:0] {
-    INSTR_NOT_EXPANDED,
-    INSTR_EXPANDED,
-    INSTR_EXPANDED_LAST
+    INSTR_NOT_EXPANDED, INSTR_EXPANDED, INSTR_EXPANDED_LAST
   } instr_exp_e;
 
-  // Exception PC mux selection
   typedef enum logic [1:0] {
-    EXC_PC_EXC,
-    EXC_PC_IRQ,
-    EXC_PC_DBD,
-    EXC_PC_DBG_EXC // Exception while in debug mode
+    EXC_PC_EXC, EXC_PC_IRQ, EXC_PC_DBD, EXC_PC_DBG_EXC
   } exc_pc_sel_e;
 
-  // Interrupt requests
   typedef struct packed {
     logic        irq_software;
     logic        irq_timer;
     logic        irq_external;
-    logic [14:0] irq_fast; // 15 fast interrupts,
-                          // one interrupt is reserved for NMI (not visible through mip/mie)
+    logic [14:0] irq_fast; 
   } irqs_t;
 
   typedef struct packed {
@@ -337,27 +180,24 @@ package ibex_pkg;
     logic [4:0] lower_cause;
   } exc_cause_t;
 
-  // DÜZELTİLMİŞ: İsimsiz (Positional) Atamalar
-  // ICARUS FIX: Tırnak isaretini (') sildik. Normal parantez {} kullandik.
-localparam exc_cause_t ExcCauseIrqSoftwareM = {1'b1, 1'b0, 5'd03};
-localparam exc_cause_t ExcCauseIrqTimerM    = {1'b1, 1'b0, 5'd07};
-localparam exc_cause_t ExcCauseIrqExternalM = {1'b1, 1'b0, 5'd11};
-localparam exc_cause_t ExcCauseIrqNm        = {1'b1, 1'b0, 5'd31};
+  localparam exc_cause_t ExcCauseIrqSoftwareM = {1'b1, 1'b0, 5'd03};
+  localparam exc_cause_t ExcCauseIrqTimerM    = {1'b1, 1'b0, 5'd07};
+  localparam exc_cause_t ExcCauseIrqExternalM = {1'b1, 1'b0, 5'd11};
+  localparam exc_cause_t ExcCauseIrqNm        = {1'b1, 1'b0, 5'd31};
 
-localparam exc_cause_t ExcCauseInsnAddrMisa     = {1'b0, 1'b0, 5'd00};
-localparam exc_cause_t ExcCauseInstrAccessFault = {1'b0, 1'b0, 5'd01};
-localparam exc_cause_t ExcCauseIllegalInsn      = {1'b0, 1'b0, 5'd02};
-localparam exc_cause_t ExcCauseBreakpoint       = {1'b0, 1'b0, 5'd03};
-localparam exc_cause_t ExcCauseLoadAccessFault  = {1'b0, 1'b0, 5'd05};
-localparam exc_cause_t ExcCauseStoreAccessFault = {1'b0, 1'b0, 5'd07};
-localparam exc_cause_t ExcCauseEcallUMode       = {1'b0, 1'b0, 5'd08};
-localparam exc_cause_t ExcCauseEcallMMode       = {1'b0, 1'b0, 5'd11};
-  // Internal NMI cause
+  localparam exc_cause_t ExcCauseInsnAddrMisa     = {1'b0, 1'b0, 5'd00};
+  localparam exc_cause_t ExcCauseInstrAccessFault = {1'b0, 1'b0, 5'd01};
+  localparam exc_cause_t ExcCauseIllegalInsn      = {1'b0, 1'b0, 5'd02};
+  localparam exc_cause_t ExcCauseBreakpoint       = {1'b0, 1'b0, 5'd03};
+  localparam exc_cause_t ExcCauseLoadAccessFault  = {1'b0, 1'b0, 5'd05};
+  localparam exc_cause_t ExcCauseStoreAccessFault = {1'b0, 1'b0, 5'd07};
+  localparam exc_cause_t ExcCauseEcallUMode       = {1'b0, 1'b0, 5'd08};
+  localparam exc_cause_t ExcCauseEcallMMode       = {1'b0, 1'b0, 5'd11};
+  
   typedef enum logic [4:0] {
     NMI_INT_CAUSE_ECC = 5'b0
   } nmi_int_cause_e;
 
-  // Debug cause
   typedef enum logic [2:0] {
     DBG_CAUSE_NONE    = 3'h0,
     DBG_CAUSE_EBREAK  = 3'h1,
@@ -366,7 +206,7 @@ localparam exc_cause_t ExcCauseEcallMMode       = {1'b0, 1'b0, 5'd11};
     DBG_CAUSE_STEP    = 3'h4
   } dbg_cause_e;
 
-  // ICache constants - DÜZELTİLDİ: parameter -> localparam
+  // ICache constants
   localparam int unsigned ADDR_W            = 32;
   localparam int unsigned BUS_SIZE          = 32;
   localparam int unsigned BUS_BYTES         = BUS_SIZE/8;
@@ -381,23 +221,17 @@ localparam exc_cause_t ExcCauseEcallMMode       = {1'b0, 1'b0, 5'd11};
   localparam int unsigned IC_LINE_BEATS_W   = $clog2(IC_LINE_BEATS);
   localparam int unsigned IC_INDEX_W        = $clog2(IC_NUM_LINES);
   localparam int unsigned IC_INDEX_HI       = IC_INDEX_W + IC_LINE_W - 1;
-  localparam int unsigned IC_TAG_SIZE       = ADDR_W - IC_INDEX_W - IC_LINE_W + 1; // 1 valid bit
-  localparam int unsigned IC_OUTPUT_BEATS   = (BUS_BYTES / 2); // number of halfwords
-  // ICache Scrambling Parameters
+  localparam int unsigned IC_TAG_SIZE       = ADDR_W - IC_INDEX_W - IC_LINE_W + 1; 
+  localparam int unsigned IC_OUTPUT_BEATS   = (BUS_BYTES / 2); 
   localparam int unsigned SCRAMBLE_KEY_W    = 128;
   localparam int unsigned SCRAMBLE_NONCE_W  = 64;
 
-  // PMP constants - DÜZELTİLDİ: parameter -> localparam
+  // PMP constants
   localparam int unsigned PMP_MAX_REGIONS       = 16;
   localparam int unsigned PMP_CFG_W             = 8;
-  // For RV32 the most significant bit of PMP address refers to the physical
-  // address bit index 33.
   localparam int unsigned PMP_ADDR_MSB          = 33;
-  // For RV32 the least significant bit of the PMP CSRs refers to the physical
-  // address bit index 2.
   localparam int unsigned PMP_ADDR_LSB          = 2;
 
-  // PMP access type - DÜZELTİLDİ: parameter -> localparam
   localparam int unsigned PMP_I  = 0;
   localparam int unsigned PMP_I2 = 1;
   localparam int unsigned PMP_D  = 2;
@@ -408,7 +242,6 @@ localparam exc_cause_t ExcCauseEcallMMode       = {1'b0, 1'b0, 5'd11};
     PMP_ACC_READ    = 2'b10
   } pmp_req_e;
 
-  // PMP cfg structures
   typedef enum logic [1:0] {
     PMP_MODE_OFF   = 2'b00,
     PMP_MODE_TOR   = 2'b01,
@@ -424,41 +257,32 @@ localparam exc_cause_t ExcCauseEcallMMode       = {1'b0, 1'b0, 5'd11};
     logic          read;
   } pmp_cfg_t;
 
-  // Machine Security Configuration (ePMP)
   typedef struct packed {
-    logic rlb;  // Rule Locking Bypass
-    logic mmwp; // Machine Mode Whitelist Policy
-    logic mml;  // Machine Mode Lockdown
+    logic rlb;  
+    logic mmwp; 
+    logic mml;  
   } pmp_mseccfg_t;
 
   // CSRs
   typedef enum logic[11:0] {
-    // Machine information
     CSR_MVENDORID  = 12'hF11,
     CSR_MARCHID    = 12'hF12,
     CSR_MIMPID     = 12'hF13,
     CSR_MHARTID    = 12'hF14,
     CSR_MCONFIGPTR = 12'hF15,
-
-    // Machine trap setup
     CSR_MSTATUS   = 12'h300,
     CSR_MISA      = 12'h301,
     CSR_MIE       = 12'h304,
     CSR_MTVEC     = 12'h305,
     CSR_MCOUNTEREN= 12'h306,
     CSR_MSTATUSH  = 12'h310,
-
     CSR_MENVCFG   = 12'h30A,
     CSR_MENVCFGH  = 12'h31A,
-
-    // Machine trap handling
     CSR_MSCRATCH  = 12'h340,
     CSR_MEPC      = 12'h341,
     CSR_MCAUSE    = 12'h342,
     CSR_MTVAL     = 12'h343,
     CSR_MIP       = 12'h344,
-
-    // Physical memory protection
     CSR_PMPCFG0   = 12'h3A0,
     CSR_PMPCFG1   = 12'h3A1,
     CSR_PMPCFG2   = 12'h3A2,
@@ -479,30 +303,19 @@ localparam exc_cause_t ExcCauseEcallMMode       = {1'b0, 1'b0, 5'd11};
     CSR_PMPADDR13 = 12'h3BD,
     CSR_PMPADDR14 = 12'h3BE,
     CSR_PMPADDR15 = 12'h3BF,
-
     CSR_SCONTEXT  = 12'h5A8,
-
-    // ePMP control
     CSR_MSECCFG   = 12'h747,
     CSR_MSECCFGH  = 12'h757,
-
-    // Debug trigger
     CSR_TSELECT   = 12'h7A0,
     CSR_TDATA1    = 12'h7A1,
     CSR_TDATA2    = 12'h7A2,
     CSR_TDATA3    = 12'h7A3,
     CSR_MCONTEXT  = 12'h7A8,
     CSR_MSCONTEXT = 12'h7AA,
-
-    // Debug/trace
     CSR_DCSR      = 12'h7b0,
     CSR_DPC       = 12'h7b1,
-
-    // Debug
-    CSR_DSCRATCH0 = 12'h7b2, // optional
-    CSR_DSCRATCH1 = 12'h7b3, // optional
-
-    // Machine Counter/Timers
+    CSR_DSCRATCH0 = 12'h7b2, 
+    CSR_DSCRATCH1 = 12'h7b3, 
     CSR_MCOUNTINHIBIT  = 12'h320,
     CSR_MHPMEVENT3     = 12'h323,
     CSR_MHPMEVENT4     = 12'h324,
@@ -599,11 +412,9 @@ localparam exc_cause_t ExcCauseEcallMMode       = {1'b0, 1'b0, 5'd11};
     CSR_SECURESEED     = 12'h7C1
   } csr_num_e;
 
-  // CSR pmp-related offsets - DÜZELTİLDİ: parameter -> localparam
-  localparam logic [11:0] CSR_OFF_PMP_CFG  = 12'h3A0; // pmp_cfg  @ 12'h3a0 - 12'h3a3
-  localparam logic [11:0] CSR_OFF_PMP_ADDR = 12'h3B0; // pmp_addr @ 12'h3b0 - 12'h3bf
+  localparam logic [11:0] CSR_OFF_PMP_CFG  = 12'h3A0; 
+  localparam logic [11:0] CSR_OFF_PMP_ADDR = 12'h3B0; 
 
-  // CSR status bits - DÜZELTİLDİ: parameter -> localparam
   localparam int unsigned CSR_MSTATUS_MIE_BIT      = 3;
   localparam int unsigned CSR_MSTATUS_MPIE_BIT     = 7;
   localparam int unsigned CSR_MSTATUS_MPP_BIT_LOW  = 11;
@@ -611,38 +422,29 @@ localparam exc_cause_t ExcCauseEcallMMode       = {1'b0, 1'b0, 5'd11};
   localparam int unsigned CSR_MSTATUS_MPRV_BIT     = 17;
   localparam int unsigned CSR_MSTATUS_TW_BIT       = 21;
 
-  // CSR machine ISA - DÜZELTİLDİ: parameter -> localparam
-  localparam logic [1:0] CSR_MISA_MXL = 2'd1; // M-XLEN: XLEN in M-Mode for RV32
+  localparam logic [1:0] CSR_MISA_MXL = 2'd1;
 
-  // CSR interrupt pending/enable bits - DÜZELTİLDİ: parameter -> localparam
   localparam int unsigned CSR_MSIX_BIT      = 3;
   localparam int unsigned CSR_MTIX_BIT      = 7;
   localparam int unsigned CSR_MEIX_BIT      = 11;
   localparam int unsigned CSR_MFIX_BIT_LOW  = 16;
   localparam int unsigned CSR_MFIX_BIT_HIGH = 30;
 
-  // CSR Machine Security Configuration bits - DÜZELTİLDİ: parameter -> localparam
   localparam int unsigned CSR_MSECCFG_MML_BIT  = 0;
   localparam int unsigned CSR_MSECCFG_MMWP_BIT = 1;
   localparam int unsigned CSR_MSECCFG_RLB_BIT  = 2;
 
-  // Architecture ID
-  // Top bit is unset to indicate an open source project. The lower bits are an ID allocated by the
-  // RISC-V Foundation. Note this is allocated specifically to Ibex, should significant changes be
-  // made a different architecture ID should be supplied.
   localparam logic [31:0] CSR_MARCHID_VALUE = {1'b0, 31'd22};
-
-  // Machine Configuration Pointer
-  // 0 indicates the configuration data structure does not exist. Ibex implementers may wish to
-  // alter this to point to their system specific configuration data structure.
   localparam logic [31:0] CSR_MCONFIGPTR_VALUE = 32'b0;
 
-  // These LFSR parameters have been generated with
-  // $ opentitan/util/design/gen-lfsr-seed.py --width 32 --seed 2480124384 --prefix ""
-  // DÜZELTİLDİ: parameter -> localparam
   localparam int LfsrWidth = 32;
   typedef logic [LfsrWidth-1:0] lfsr_seed_t;
-  typedef logic [LfsrWidth-1:0][$clog2(LfsrWidth)-1:0] lfsr_perm_t;
+  
+  // ICARUS FIX: Multi-dimensional packed array CRASH cozum
+  // [31:0][4:0] gibi tanimlar yerine [159:0] gibi flat tanim yapiyoruz.
+  // 32 * 5 = 160 bit
+  typedef logic [159:0] lfsr_perm_t;
+  
   localparam lfsr_seed_t RndCnstLfsrSeedDefault = 32'hac533bf4;
   localparam lfsr_perm_t RndCnstLfsrPermDefault = {
     160'h1e35ecba467fd1b12e958152c04fa43878a8daed
@@ -652,48 +454,23 @@ localparam exc_cause_t ExcCauseEcallMMode       = {1'b0, 1'b0, 5'd11};
   localparam logic [SCRAMBLE_NONCE_W-1:0] RndCnstIbexNonceDefault =
       64'hf79780bc735f3843;
 
-  // Multi-bit signal used for security hardening. For non-secure implementation all bits other than
-  // the bottom bit are ignored.
-  // DÜZELTİLDİ: parameter -> localparam
   localparam int IbexMuBiWidth = 4;
   typedef logic [IbexMuBiWidth-1:0] ibex_mubi_t;
 
-  // Note that if adjusting these parameters it is assumed the bottom bit is set for On and unset
-  // for Off. This allows the use of IbexMuBiOn/IbexMuBiOff to work for both secure and non-secure
-  // Ibex. If this assumption is broken the RTL that uses ibex_mubi_t types such as the fetch_enable
-  // and core_busy signals within `ibex_core` may need adjusting.
-  // DÜZELTİLDİ: parameter -> localparam
   localparam ibex_mubi_t IbexMuBiOn  = 4'b0101;
   localparam ibex_mubi_t IbexMuBiOff = 4'b1010;
 
-  // Default reset values for PMP CSRs. Where the number of regions
-  // (PMPNumRegions) is less than 16 the reset values for the higher numbered
-  // regions are ignored.
-  //
-  // See the Ibex Reference Guide (Custom Reset Values under Physical Memory
-  // Protection) for more information.
-
- // Default reset values for PMP CSRs.
-  // Icarus Verilog FIX: Struct constructor '{...} yerine direkt HEX degerler kullaniyoruz.
-  // pmp_cfg_t 'packed' bir struct oldugu icin 6 bitlik vektor olarak atanabilir.
-  // (1 bit lock + 2 bit mode + 1 bit exec + 1 bit write + 1 bit read = 6 bits)
   // Default reset values for PMP CSRs.
-  // Icarus Verilog FIX: Struct constructor '{...} yerine direkt HEX degerler kullaniyoruz.
-  // pmp_cfg_t 'packed' bir struct oldugu icin 6 bitlik vektor olarak atanabilir.
-  // (1 bit lock + 2 bit mode + 1 bit exec + 1 bit write + 1 bit read = 6 bits)
+  // ICARUS FIX: Flattened & Replicated
+  // PmpAddrRst'yi [15:0][33:0] (2D Packed) olmaktan kurtarip 1D yapiyoruz.
+  // 16 * 34 = 544 bit
+  // PMP_MAX_REGIONS=16, PMP_ADDR_MSB=33
   
-  // Default reset values for PMP CSRs.
-  // ICARUS FIX: Packed Array ve Replication Operator Kullanimi
-  // Eski 'unpacked' dizi yerine, erisimi ayni olan 'packed' dizi yapiyoruz.
-  // Boylece '{...} yerine {16{...}} kullanabiliyoruz.
-  
-  // 16 adet, her biri 6 bitlik (struct boyutu) eleman
   localparam pmp_cfg_t [PMP_MAX_REGIONS-1:0] PmpCfgRst = {PMP_MAX_REGIONS{6'h0}};
+  
+  // FLAT DEFINE: 16 adet 34-bit eleman = 544 bit
+  localparam logic [(PMP_MAX_REGIONS * (PMP_ADDR_MSB + 1)) - 1 : 0] PmpAddrRst = {PMP_MAX_REGIONS{34'h0}};
 
-  // Addresses are given in byte granularity.
-  // 16 adet, her biri 34 bitlik (PMP_ADDR_MSB=33) eleman
-  localparam logic [PMP_MAX_REGIONS-1:0][PMP_ADDR_MSB:0] PmpAddrRst = {PMP_MAX_REGIONS{34'h0}};
-
-  // MSECCFG Reset degeri (3 bit)
   localparam pmp_mseccfg_t PmpMseccfgRst = 3'h0;
-  endpackage
+
+endpackage

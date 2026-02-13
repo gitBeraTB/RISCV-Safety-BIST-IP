@@ -1,5 +1,6 @@
 # RISC-V Ibex Core with Built-In Self-Test (BIST) Integration
 
+![Cocotb Tests](https://github.com/gitBeraTB/RISCV-Safety-BIST-IP/actions/workflows/cocotb-tests.yml/badge.svg)
 ![Status](https://img.shields.io/badge/Status-Verified-success)
 ![Platform](https://img.shields.io/badge/Platform-Xilinx%20Vivado-blue)
 ![Language](https://img.shields.io/badge/Language-SystemVerilog-orange)
@@ -40,9 +41,25 @@ To resolve this, the internal datapath of the MultDiv unit was modified:
 
 ##  Verification & Simulation Results
 
-The integrated design was verified using a behavioral testbench (`tb_ibex_ex_block.sv`) in Vivado. The simulation confirms that the BIST wrapper correctly drives the processor core and retrieves accurate results despite the bit-width modifications.
+The integrated design is verified at two levels: **Cocotb unit/integration tests** (CI) and **Vivado behavioral simulation**.
 
-### Waveform Analysis
+### Cocotb Test Suite (42 Tests — CI Automated)
+
+| Module | Test File | Tests | Status |
+| :--- | :--- | :---: | :---: |
+| LFSR Generator | `test_lfsr_gen.py` | 5 | ✅ 5 Pass |
+| MISR Analyzer | `test_misr_analyzer.py` | 5 | ✅ 5 Pass |
+| Idle Detector | `test_idle_detector.py` | 4 | ✅ 4 Pass |
+| APB Slave IF | `test_apb_slave_if.py` | 4 | ✅ 4 Pass |
+| Ibex ALU | `test_ibex_alu.py` | 7 | ✅ 5 Pass, 2 Skip |
+| Ibex MultDiv | `test_ibex_multdiv.py` | 4 | ✅ 4 Pass |
+| BIST Controller | `test_bist_controller.py` | 5 | ✅ 5 Pass |
+| **BIST Wrapper** | `test_bist_wrapper.py` | 4 | ✅ 3 Pass, 1 Skip |
+| **Full System** | `test_full_system.py` | 4 | ✅ 4 Pass |
+
+> Tests run automatically on every push via GitHub Actions using **Icarus Verilog** + **cocotb**.
+
+### Vivado Waveform Analysis
 ![Simulation Waveform](RISC-BIST.png)
 
 | Test Case | Operation | Inputs | Expected Output | Measured Output | Status |
@@ -84,15 +101,22 @@ RISCV-Safety-BIST-IP/
 
 1.  **Clone the Repository:**
     ```bash
-    git clone [https://github.com/gitBeraTB/RISCV-Safety-BIST-IP.git](https://github.com/gitBeraTB/RISCV-Safety-BIST-IP.git)
+    git clone https://github.com/gitBeraTB/RISCV-Safety-BIST-IP.git
     ```
 
-2.  **Open in Vivado:**
+2.  **Run Cocotb Tests (Icarus Verilog):**
+    ```bash
+    pip install cocotb
+    cd Test
+    make -f Makefile test_all
+    ```
+
+3.  **Open in Vivado:**
     * Create a new project.
     * Add files from the `HDL` folder.
     * Set `ibex_ex_block` or `ibex_alu_bist_wrapper` as the Top Module.
 
-3.  **Run Simulation:**
+4.  **Run Vivado Simulation:**
     * Add `Test/tb_ibex_ex_block.sv` as a simulation source.
     * Run Behavioral Simulation.
 
