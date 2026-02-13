@@ -13,7 +13,7 @@
 # --- Configuration ---
 set project_name  "riscv_bist_ip"
 set part          "xc7a35tcpg236-1"       ;# Artix-7 35T (Basys3 / Arty compatible)
-set top_module    "ibex_ex_block"          ;# Top module for synthesis
+set top_module    "fpga_top"               ;# FPGA wrapper (reduces I/O count)
 
 # Paths (relative to this script's location)
 set script_dir    [file dirname [info script]]
