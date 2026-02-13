@@ -106,8 +106,8 @@ jobs:
           echo "| 2 | MISR Analyzer | ✅ 5/5 |" >> $GITHUB_STEP_SUMMARY
           echo "| 3 | Idle Detector | ✅ 4/4 |" >> $GITHUB_STEP_SUMMARY
           echo "| 4 | APB Slave IF | ✅ 4/4 |" >> $GITHUB_STEP_SUMMARY
-          echo "| 5 | Ibex ALU | ✅ 5/5 + 2 skip |" >> $GITHUB_STEP_SUMMARY
+          echo "| 5 | Ibex ALU | ✅ 7/7 |" >> $GITHUB_STEP_SUMMARY
           echo "| 6 | Ibex MultDiv | ✅ 4/4 |" >> $GITHUB_STEP_SUMMARY
           echo "| 7 | BIST Controller | ✅ 5/5 |" >> $GITHUB_STEP_SUMMARY
-          echo "| 8 | BIST Wrapper | ✅ 3/3 + 1 skip |" >> $GITHUB_STEP_SUMMARY
+          echo "| 8 | BIST Wrapper | ✅ 4/4 |" >> $GITHUB_STEP_SUMMARY
           echo "| 9 | Full System | ✅ 4/4 |" >> $GITHUB_STEP_SUMMARY

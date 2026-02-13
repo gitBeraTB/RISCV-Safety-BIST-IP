@@ -51,10 +51,10 @@ The integrated design is verified at two levels: **Cocotb unit/integration tests
 | MISR Analyzer | `test_misr_analyzer.py` | 5 | ✅ 5 Pass |
 | Idle Detector | `test_idle_detector.py` | 4 | ✅ 4 Pass |
 | APB Slave IF | `test_apb_slave_if.py` | 4 | ✅ 4 Pass |
-| Ibex ALU | `test_ibex_alu.py` | 7 | ✅ 5 Pass, 2 Skip |
+| Ibex ALU | `test_ibex_alu.py` | 7 | ✅ 7 Pass |
 | Ibex MultDiv | `test_ibex_multdiv.py` | 4 | ✅ 4 Pass |
 | BIST Controller | `test_bist_controller.py` | 5 | ✅ 5 Pass |
-| **BIST Wrapper** | `test_bist_wrapper.py` | 4 | ✅ 3 Pass, 1 Skip |
+| **BIST Wrapper** | `test_bist_wrapper.py` | 4 | ✅ 4 Pass |
 | **Full System** | `test_full_system.py` | 4 | ✅ 4 Pass |
 
 > Tests run automatically on every push via GitHub Actions using **Icarus Verilog** + **cocotb**.

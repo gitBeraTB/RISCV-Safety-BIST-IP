@@ -97,6 +97,8 @@ module ibex_alu_bist_wrapper import ibex_pkg::*; #(
         .multdiv_sel_i       (1'b0)
     );
 
+    // Fault injection: XOR bit[0] of result during BIST when sim_fault_inject_i is active
+    wire [31:0] alu_result_fault = alu_result_raw ^ {31'b0, (sim_fault_inject_i & bist_active)};
     assign result_o = alu_result_raw;
 
     // RUNTIME BIST CONTROLLER  
@@ -107,7 +109,7 @@ module ibex_alu_bist_wrapper import ibex_pkg::*; #(
         .rst_n            (rst_ni),
         .sys_req_valid    (!core_sleep_i), 
         .bist_active_mode (bist_active),
-        .dut_result_in    (alu_result_raw),
+        .dut_result_in    (alu_result_fault),
         .bist_pattern_out (bist_pattern),
         .paddr(paddr_i), .psel(psel_i), .penable(penable_i), 
         .pwrite(pwrite_i), .pwdata(pwdata_i), .prdata(prdata_o), .pready(pready_o),

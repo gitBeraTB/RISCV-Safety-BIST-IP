@@ -170,11 +170,10 @@ async def test_slt(dut):
     dut._log.info("✅ SLT verified")
 
 
-@cocotb.test(skip=True)
+@cocotb.test()
 async def test_shift_left(dut):
-    """Test SLL — skipped: requires full pipeline register for bit-reversal mechanism."""
+    """Test SLL — combinational with RV32B=0 (bit-reverse → SRL → bit-reverse)."""
     cocotb.start_soon(Clock(dut.clk_i, 10, unit="ns").start())
-    cocotb.start_soon(imd_val_loopback(dut))
     await reset(dut)
 
     test_cases = [
@@ -188,20 +187,16 @@ async def test_shift_left(dut):
         dut.operand_b_i.value = shamt
         dut.instr_first_cycle_i.value = 1
         await RisingEdge(dut.clk_i)
-        dut.instr_first_cycle_i.value = 0
-        await RisingEdge(dut.clk_i)
-        await RisingEdge(dut.clk_i)  # extra cycle for shift pipeline
         res = dut.result_o.value.to_unsigned()
         assert res == expected, f"SLL({a}, {shamt}): 0x{res:08X} != 0x{expected:08X}"
 
     dut._log.info("✅ SLL verified")
 
 
-@cocotb.test(skip=True)
+@cocotb.test()
 async def test_shift_right(dut):
-    """Test SRL — skipped: requires full pipeline register for bit-reversal mechanism."""
+    """Test SRL — combinational shift right."""
     cocotb.start_soon(Clock(dut.clk_i, 10, unit="ns").start())
-    cocotb.start_soon(imd_val_loopback(dut))
     await reset(dut)
 
     test_cases = [
@@ -214,8 +209,6 @@ async def test_shift_right(dut):
         dut.operand_a_i.value = a
         dut.operand_b_i.value = shamt
         dut.instr_first_cycle_i.value = 1
-        await RisingEdge(dut.clk_i)
-        dut.instr_first_cycle_i.value = 0
         await RisingEdge(dut.clk_i)
         res = dut.result_o.value.to_unsigned()
         assert res == expected, f"SRL(0x{a:08X}, {shamt}): 0x{res:08X} != 0x{expected:08X}"

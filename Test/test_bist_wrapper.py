@@ -174,9 +174,8 @@ async def test_calibration_and_recheck(dut):
     dut._log.info("✅ Calibration → re-run → PASS verified")
 
 
-@cocotb.test(skip=True)
+@cocotb.test()
 async def test_fault_injection(dut):
-    """SKIP: sim_fault_inject_i is not wired in ibex_alu_bist_wrapper HDL — no fault mechanism."""
     """With sim_fault_inject, BIST should detect a hardware fault."""
     cocotb.start_soon(Clock(dut.clk_i, 10, unit="ns").start())
     await reset(dut)
